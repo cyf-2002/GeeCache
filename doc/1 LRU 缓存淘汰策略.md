@@ -1,22 +1,26 @@
-package lru
+## 1. 核心数据结构
 
-import (
-	"container/list"
-)
+ll：双向链表，按照 LRU 算法对内存数据排序，约定 front 为队尾，查找数据 ele 时 `ll.MoveToFront(ele)`
 
+cache：字典，值是双向链表中对应节点的指针
+
+entry： 双向链表节点的数据类型，在链表中仍保存每个值对应的 key 的好处在于，淘汰队首节点时，需要用 key 从字典中删除对应的映射
+
+Value：使用接口的优势在于，你可以在不关心具体类型的情况下编写代码。例如，如果你的链表节点需要存储不同类型的值，只要这些值实现了 `Value` 接口，你就可以在节点中使用它们，而不用关心具体的类型是什么
+
+```go
 // Cache is a LRU cache. It is not safe for concurrent access.
 type Cache struct {
-	maxBytes int64
-	nbytes   int64
-	ll       *list.List
-	cache    map[string]*list.Element
+	maxBytes  int64
+	nbytes    int64
+	ll        *list.List
+	cache     map[string]*list.Element
 	// 某条记录被移除时的回调函数，可以为 nil
 	OnEvicted func(key string, value Value)
 }
 
 // 双向链表节点的数据类型
 type entry struct {
-	// 淘汰节点时方便从字典中删除 key
 	key   string
 	value Value
 }
@@ -25,7 +29,13 @@ type entry struct {
 type Value interface {
 	Len() int
 }
+```
 
+
+
+## 2. 增删查改
+
+```go
 // New is the Constructor of Cache
 func New(maxBytes int64, onEvicted func(string, Value)) *Cache {
 	return &Cache{
@@ -85,3 +95,5 @@ func (c *Cache) Add(key string, value Value) {
 func (c *Cache) Len() int {
 	return c.ll.Len()
 }
+```
+
