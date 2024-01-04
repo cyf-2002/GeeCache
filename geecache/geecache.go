@@ -25,6 +25,7 @@ type Group struct {
 	name      string
 	getter    Getter
 	mainCache cache
+	hotCache  cache
 	peers     PeerPicker
 	loader    *singleflight.Group // 防止缓存击穿
 }

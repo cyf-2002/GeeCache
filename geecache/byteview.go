@@ -1,8 +1,11 @@
 package geecache
 
+import "time"
+
 // ByteView 抽象一个只读数据结构，表示缓存值
 type ByteView struct {
-	b []byte
+	b      []byte
+	expire time.Time
 }
 
 // Len 实现 Value 接口
