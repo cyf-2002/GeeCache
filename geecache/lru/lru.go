@@ -4,7 +4,7 @@ import (
 	"container/list"
 )
 
-// Cache is a LRU cache. It is not safe for concurrent access.
+// Cache is an LRU cache. It is not safe for concurrent access.
 type Cache struct {
 	maxBytes int64
 	nbytes   int64
@@ -53,7 +53,7 @@ func (c *Cache) RemoveOldest() {
 	// 移除最近最少访问的节点
 	ele := c.ll.Back()
 	if ele != nil {
-		c.ll.Remove((ele))
+		c.ll.Remove(ele)
 		kv := ele.Value.(*entry)
 		// 删除映射关系
 		delete(c.cache, kv.key)

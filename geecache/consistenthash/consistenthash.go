@@ -28,7 +28,7 @@ func New(replicas int, fn Hash) *Map {
 	return m
 }
 
-// 添加真实节点
+// Add 添加真实节点
 func (m *Map) Add(keys ...string) {
 	for _, key := range keys {
 		for i := 0; i < m.replicas; i++ {
@@ -41,7 +41,7 @@ func (m *Map) Add(keys ...string) {
 	sort.Ints(m.keys)
 }
 
-// 在环上选择最近的节点
+// Get 在环上选择最近的节点
 func (m *Map) Get(key string) string {
 	if len(m.keys) == 0 {
 		return ""
